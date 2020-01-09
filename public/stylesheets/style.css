@@ -140,6 +140,8 @@ label {
 }
 
 input[type="text"],
+input[type="email"],
+input[type="password"],
 select,
 textarea {
   padding: 0.3rem;
@@ -177,4 +179,22 @@ ul.error li {
   background-color: #f2dede;
   border-color: #ebccd1;
   list-style: none;
+}
+
+.btn {
+  background-color: #83cd29;
+  color: #fff;
+  padding: 8px;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.7);
+}
+
+.forgot:link,
+.forgot:visited {
+  text-decoration: none;
+  color: #83cd29;
 }

@@ -5,8 +5,9 @@ block content
         each error, i in errors
             div.alert.alert-danger #{error.msg}
     form(action="/categories/add", method="post")
+        br
         .form-group
             label(for="name") Name:
             input.form-control(name="name", type="text")
 
-        input.btn.btn-default(type="submit", name="submit", value="Save")
+        input.btn.btn-default(type="submit", class="btn", name="submit", value="Save")

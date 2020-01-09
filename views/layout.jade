@@ -16,6 +16,16 @@ html
 
           li
             a(href="/categories/add") Add Category
+
+          if !user
+            li
+              a(href="/users/register") Register
+
+            li
+              a(href="/auth/login") Login
+          if user
+            li
+              a(href="/auth/logout") Logout
       != messages()
       block content
       footer

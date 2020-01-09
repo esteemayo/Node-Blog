@@ -1,0 +1,11 @@
+extends ../layout
+
+block content
+    h2 Forgot Password
+    form(action="/auth/forgot", method="post")
+        br
+        .form-group
+            label(for="email") Email:
+            input.form-control(name="email", type="email")
+
+        input.btn.btn-default(type="submit", class="btn", name="submit", value="Submit")
