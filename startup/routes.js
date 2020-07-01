@@ -14,10 +14,10 @@ const cors = require('cors');
 const hpp = require('hpp');
 
 // Routes
-const AppError = require('../utils/appError');
 const globalErrorHandler = require('../controllers/errorController');
-const postRoute = require('../routes/posts');
 const categoryRoute = require('../routes/categories');
+const AppError = require('../utils/appError');
+const postRoute = require('../routes/posts');
 const userRoute = require('../routes/user');
 const viewRoute = require('../routes/view');
 
