@@ -1,1 +1,3 @@
-Node Blog System
+# Node Blog System
+
+Built using modern technologies: node.js, express, mongoDB, mongoose and more

@@ -1,12 +1,19 @@
-require('dotenv').config();
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
+const mongoSanitize = require('express-mongo-sanitize');
+const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
 const session = require('express-session');
+const compression = require('compression');
+const createError = require('http-errors');
 const passport = require('passport');
+const express = require('express');
+const morgan = require('morgan');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const path = require('path');
+const cors = require('cors');
+const hpp = require('hpp');
 
+// Routes
 const AppError = require('../utils/appError');
 const globalErrorHandler = require('../controllers/errorController');
 const postRoute = require('../routes/posts');
@@ -27,13 +34,32 @@ module.exports = app => {
         return truncateText;
     }
 
+    // Implement cors
+    app.use(cors());
+
+    // Access-Control-Allow-Origin
+    app.options('*', cors());
+
     // view engine setup
     app.set('views', path.join(`${__dirname}/../views`));
     app.set('view engine', 'jade');
 
+    // Set security http headers
+    app.use(helmet());
+
+    // Development logging
     if (process.env.NODE_ENV === 'development') {
         app.use(morgan('dev'));
     }
+
+    // Limit request from same api
+    const limiter = rateLimit({
+        max: 100,
+        windowMs: 60 * 60 * 1000, // 1hr
+        message: 'Too many requests from this IP, Please try again in an hour!'
+    });
+
+    app.use('/api', limiter);
 
     // Express body-parser middleware
     app.use(express.json({ limit: '10kb' }));
@@ -41,6 +67,23 @@ module.exports = app => {
 
     // Cookie-parser middleware
     app.use(cookieParser());
+
+    // Data sanitization against NoSQL query injection
+    app.use(mongoSanitize());
+
+    // Data sanitization against XSS
+    app.use(xss());
+
+    // Prevent parameter pollution
+    app.use(hpp({
+        whitelist: [
+            'title',
+            'category',
+            'author'
+        ]
+    }));
+
+    app.use(compression());
 
     // Static files
     app.use(express.static(path.join(`${__dirname}/../public`)));

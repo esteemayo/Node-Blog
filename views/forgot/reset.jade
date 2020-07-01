@@ -4,14 +4,14 @@ block content
     if errors
         each error, i in errors
             div.alert.alert-danger #{error.msg}
-    form(action="/auth/reset/#{token}", method="post")
+    form(action=`/auth/reset/${token}`, method="post")
         br
         .form-group
             label(for="password") Password:
             input.form-control(name="password", type="password")
 
         .form-group
-            label(for="password2") Confirm Password:
-            input.form-control(name="password2", type="password")
+            label(for="confirm") Confirm Password:
+            input.form-control(name="confirm", type="password")
 
         input.btn.btn-default(type="submit", class="btn", name="submit", value="Login")
