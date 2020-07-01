@@ -11,10 +11,7 @@ router.get('/posts/add', authController.protect, viewsController.getPostForm);
 
 router.get('/posts/show/:id', viewsController.getPost);
 
-router.post('/posts/addcomment/:id',
-    authController.protect,
-    viewsController.createComment
-);
+router.post('/posts/addcomment/:id', viewsController.createComment);
 
 router.post('/posts/add',
     authController.protect,
