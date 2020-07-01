@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const crypto = require('crypto');
+// const crypto = require('crypto');
 const passport = require('passport');
 const User = require('../models/User');
 const AppError = require('../utils/appError');
@@ -15,7 +15,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     user.password = undefined;
 
     const url = `${req.protocol}://${req.get('host')}/auth/login`;
-    await new sendEmail(user, url);
+    await new sendEmail(user, url).sendWelcome();
 
     res.status(201).redirect('/auth/login');
 });
@@ -58,7 +58,7 @@ exports.forgot = catchAsync(async (req, res, next) => {
     try {
         const resetURL = `${req.protocol}://${req.get('host')}/auth/reset/${resetToken}`;
 
-        await new sendEmail(user, resetURL)
+        await new sendEmail(user, resetURL).sendPasswordReset();
 
         req.flash('success', `An e-mail has been sent to ${user.email} with further instructions.`);
         res.status(200).redirect('back');
