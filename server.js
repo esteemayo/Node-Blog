@@ -12,7 +12,7 @@ const app = require('./app');
 
 require('./startup/db')();
 
-const PORT = 7070 || process.env.PORT;
+const PORT = 3000 || process.env.PORT;
 
 const server = app.listen(PORT, () => console.log(`APP LISTENING ON PORT ${PORT}`));
 
