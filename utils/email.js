@@ -11,7 +11,7 @@ const sendEmail = async options => {
     });
 
     const mailOptions = {
-        from: 'Admin <admin@nodeblog.io>',
+        from: `Admin <${process.env.EMAIL_FROM}>`,
         to: options.email,
         subject: options.subject,
         text: options.message
