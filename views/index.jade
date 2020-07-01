@@ -2,13 +2,13 @@ extend layout
 
 block content
     if posts
-        each post, i in posts
+        each post in posts
             .post
                 h1
-                    a(href='/posts/show/#{post._id}')
+                    a(href=`/posts/show/${post._id}`)
                     =post.title
                 p.meta Posted in 
-                    a(href='/categories/show/#{post.category}') #{post.category} by #{post.author} on #{moment(post.date).format("MM-DD-YYYY")}
-                    img(src='/images/#{post.image}') 
+                    a(href=`/categories/show/${post.category}`)= `${post.category} by ${post.author.firstName} ${post.author.lastName} on ${moment(post.date).format("MM-DD-YYYY")}`
+                    img(src=`/images/posts/${post.image}` alt=`${post.title}`) 
                     !=truncateText(post.body,400)
-                    a.more(href='/posts/show/#{post._id}') Read More &rarr;
+                    a.more(href=`/posts/show/${post._id}`) Read More &rarr;

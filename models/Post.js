@@ -14,7 +14,8 @@ const postSchema = new mongoose.Schema({
         required: [true, 'A post must have a body']
     },
     author: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: [true, 'A post must have an author']
     },
     comments: [
@@ -43,8 +44,18 @@ const postSchema = new mongoose.Schema({
         default: Date.now
     },
     image: {
-        type: String
+        type: String,
+        default: 'noimage.jpg'
     }
+});
+
+postSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'author',
+        select: 'firstName lastName'
+    });
+
+    next();
 });
 
 const Post = mongoose.model('Post', postSchema);

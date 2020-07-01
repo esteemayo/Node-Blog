@@ -1,21 +1,23 @@
 doctype html
 html
   head
-    title= title
+    title NodeBlog | #{title}
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     .container
       img(src="/images/nodebloglogo.png", alt="Node blog logo")
       nav
         ul
+          if user
           li
             a(href="/") Home
 
-          li
-            a(href="/posts/add") Add Post
+          if user
+            li
+              a(href="/posts/add") Add Post
 
-          li
-            a(href="/categories/add") Add Category
+            li
+              a(href="/categories/add") Add Category
 
           if !user
             li
@@ -24,6 +26,8 @@ html
             li
               a(href="/auth/login") Login
           if user
+            li
+              a(href="#")= `${user.firstName}`
             li
               a(href="/auth/logout") Logout
       != messages()

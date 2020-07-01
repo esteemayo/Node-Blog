@@ -41,10 +41,7 @@ exports.getOne = Model => catchAsync(async (req, res, next) => {
 exports.createOne = Model => catchAsync(async (req, res, next) => {
     let doc = req.body
 
-    if (req.file)
-        doc.image = req.file.filename
-    else
-        image = 'noimage.jpg';
+    if (req.file) doc.image = req.file.filename
 
     doc = await Model.create(doc);
 
@@ -59,10 +56,7 @@ exports.createOne = Model => catchAsync(async (req, res, next) => {
 exports.updateOne = Model => catchAsync(async (req, res, next) => {
     let doc = req.body
 
-    if (req.file)
-        doc.image = req.file.filename
-    else
-        image = 'noimage.jpg';
+    if (req.file) doc.image = req.file.filename
 
     doc = await Model.findByIdAndUpdate(req.params.id, doc, {
         new: true,

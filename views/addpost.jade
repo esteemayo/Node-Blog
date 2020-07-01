@@ -2,7 +2,7 @@ extends layout
 
 block content
     if errors
-        each error, i in errors
+        each error in errors
             div.alert.alert-danger #{error.msg}
     form(action="/posts/add", method="post", enctype="multipart/form-data")
         br
@@ -13,7 +13,7 @@ block content
         .form-group
             label(for="category") Category
             select.form-control(name="category")
-                each category, i in categories
+                each category in categories
                     option(value="#{category.name}") #{category.name}
         
         .form-group
@@ -22,13 +22,13 @@ block content
 
         .form-group
             label(for="image") Main Image:
-            input.form-control(name="image", type="file")
+            input.form-control(name="image", type="file" accept="image/*")
 
-        .form-group
-            label(for="author") Author:
-            select.form-control(name="author")
-                option(value="John Doe") John Doe
-                option(value="Mary Doe") Mary Doe
+        //- .form-group
+        //-     label(for="author") Author:
+        //-     select.form-control(name="author")
+        //-         option(value="John Doe") John Doe
+        //-         option(value="Mary Doe") Mary Doe
 
         input.btn.btn-default(type="submit", class="btn", name="submit", value="Save")
 

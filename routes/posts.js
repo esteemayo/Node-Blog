@@ -9,6 +9,7 @@ router
     .get(postController.getAllPosts)
     .post(
         postController.uploadPostImage,
+        postController.resizePostImage,
         postController.createPost
     );
 
@@ -17,6 +18,7 @@ router
     .get(postController.getPost)
     .patch(
         postController.uploadPostImage,
+        postController.resizePostImage,
         postController.updatePost
     )
     .delete(postController.deletePost);

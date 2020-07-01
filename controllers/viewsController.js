@@ -32,7 +32,15 @@ exports.getPost = catchAsync(async (req, res, next) => {
 });
 
 exports.createPost = catchAsync(async (req, res, next) => {
-    let post = _.pick(req.body, ['title', 'category', 'body', 'author', 'comment']);
+    // let post = _.pick(req.body, ['title', 'category', 'body', 'author', 'comment']);
+    const { title, category, body, author, comment } = req.body;
+    let post = {
+        title,
+        category,
+        body,
+        author: req.user.id,
+        comment
+    };
 
     if (req.file)
         post.image = req.file.filename
