@@ -13,8 +13,6 @@ const postRoute = require('../routes/posts');
 const categoryRoute = require('../routes/categories');
 const userRoute = require('../routes/user');
 const viewRoute = require('../routes/view');
-const forgot = require('../routes/forgot');
-const reset = require('../routes/reset');
 
 module.exports = app => {
     // Pasport
@@ -76,11 +74,8 @@ module.exports = app => {
         next();
     });
 
-
     app.use('/', viewRoute);
     app.use('/', userRoute);
-    // app.use('/auth/forgot', forgot);
-    app.use('/auth/reset/:token', reset);
     app.use('/api/v1/posts', postRoute);
     app.use('/api/v1/categories', categoryRoute);
 
@@ -88,7 +83,6 @@ module.exports = app => {
     app.use(function (req, res, next) {
         next(createError(404));
     });
-
 
     // error handler
     app.use(function (err, req, res, next) {
@@ -106,4 +100,4 @@ module.exports = app => {
     });
 
     app.use(globalErrorHandler);
-}
+};

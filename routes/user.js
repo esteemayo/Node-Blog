@@ -22,6 +22,11 @@ router
     .post(authController.forgot);
 
 router
+    .route('/auth/reset/:token')
+    .get(authController.resetPasswordForm)
+    .post(authController.resetPassword);
+
+router
     .route('/api/v1/users')
     .get(userController.getAllUsers)
     .post(userController.createUser);

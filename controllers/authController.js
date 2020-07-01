@@ -51,6 +51,9 @@ exports.forgot = catchAsync(async (req, res, next) => {
             message
         });
 
+        // req.flash('success', `An e-mail has been sent to ${user.email} with further instructions.`);
+        // res.status(200).redirect('back');
+
         res.status(200).json({
             status: 'success',
             message: 'Token sent to email'
@@ -59,6 +62,8 @@ exports.forgot = catchAsync(async (req, res, next) => {
         user.resetPasswordToken = undefined;
         user.resetPasswordExpires = undefined;
         await user.save({ validateBeforeSave: false });
+
+        // res.status(200).redirect('/auth/forgot');
 
         return next(new AppError('There was an error sending the email. Try again later!', 500));
     }
