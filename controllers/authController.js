@@ -87,7 +87,7 @@ exports.resetPasswordForm = catchAsync(async (req, res, next) => {
     const user = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } });
     if (!user) {
         req.flash('error', 'Password reset token is invalid or has expired.');
-        return res.status(200).redirect('/auth/forgot');
+        return res.status(401).redirect('/auth/forgot');
     }
     res.status(200).render('forgot/reset', {
         title: 'Reset your account password',
