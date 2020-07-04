@@ -42,10 +42,7 @@ exports.createPost = catchAsync(async (req, res, next) => {
         comment
     };
 
-    if (req.file)
-        post.image = req.file.filename
-    else
-        image = 'noimage.jpg';
+    if (req.file) post.image = req.file.filename
 
     post = await Post.create(post);
 
