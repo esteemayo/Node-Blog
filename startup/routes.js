@@ -2,12 +2,10 @@ const mongoSanitize = require('express-mongo-sanitize');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const compression = require('compression');
 const createError = require('http-errors');
 const passport = require('passport');
 const express = require('express');
 const morgan = require('morgan');
-const helmet = require('helmet');
 const xss = require('xss-clean');
 const path = require('path');
 const cors = require('cors');
@@ -20,6 +18,7 @@ const AppError = require('../utils/appError');
 const postRoute = require('../routes/posts');
 const userRoute = require('../routes/user');
 const viewRoute = require('../routes/view');
+const helpers = require('../helpers');
 
 module.exports = app => {
     // Pasport
@@ -43,9 +42,6 @@ module.exports = app => {
     // view engine setup
     app.set('views', path.join(`${__dirname}/../views`));
     app.set('view engine', 'jade');
-
-    // Set security http headers
-    app.use(helmet());
 
     // Development logging
     if (process.env.NODE_ENV === 'development') {
@@ -83,8 +79,6 @@ module.exports = app => {
         ]
     }));
 
-    app.use(compression());
-
     // Serving static files
     app.use(express.static(path.join(`${__dirname}/../public`)));
 
@@ -107,6 +101,7 @@ module.exports = app => {
     });
 
     app.use((req, res, next) => {
+        res.locals.h = helpers;
         res.locals.user = req.user || null;
         next();
     });
@@ -121,22 +116,6 @@ module.exports = app => {
     app.use('/', userRoute);
     app.use('/api/v1/posts', postRoute);
     app.use('/api/v1/categories', categoryRoute);
-
-    // catch 404 and forward to error handler
-    // app.use(function (req, res, next) {
-    //     next(createError(404));
-    // });
-
-    // error handler
-    // app.use(function (err, req, res, next) {
-    //     // set locals, only providing error in development
-    //     res.locals.message = err.message;
-    //     res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    //     // render the error page
-    //     res.status(err.status || 500);
-    //     res.render('error');
-    // });
 
     app.all('*', (req, res, next) => {
         next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));

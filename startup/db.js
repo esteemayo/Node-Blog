@@ -2,7 +2,9 @@ const mongoose = require('mongoose');
 const config = require('config');
 
 module.exports = () => {
-    mongoose.connect(config.get('db'), {
+    const db = config.get('db');
+
+    mongoose.connect(db, {
         useNewUrlParser: true,
         useCreateIndex: true,
         useUnifiedTopology: true,
@@ -10,7 +12,6 @@ module.exports = () => {
     })
         .then(con => {
             // console.log(con.connections);
-            console.log('MongoDB Connected...')
-        })
-        .catch(err => console.log(`COULD NOT CONNECT TO MONGODB: ${err}`));
+            console.log(`MongoDB Connected...${db}`)
+        });
 };

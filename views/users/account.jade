@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+    if errors
+        each error, i in errors
+            div.alert.alert-danger #{error.msg}
+    form(action="/submit-user-data" method="POST")
+        br
+        .form-group
+            label(for="firstName") First Name:
+            input.form-control(name="firstName" id="firstName" type="text" value=user.firstName)
+
+        .form-group
+            label(for="lastName") Last Name:
+            input.form-control(name="lastName" id="lastName" type="text" value=user.lastName)
+
+        .form-group
+            label(for="email") Email:
+            input.form-control(name="email" id="email" type="email" value=user.email)
+
+        input.btn.btn-default(type="submit" class="btn" name="submit" value="Save settings →")

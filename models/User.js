@@ -2,6 +2,7 @@ const validator = require('validator');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const md5 = require('md5');
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -16,18 +17,19 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide your email address'],
         unique: true,
+        trim: true,
         lowercase: true,
         validate: [validator.isEmail, 'Please provide valid email']
     },
     password: {
         type: String,
         required: [true, 'Please provide your password'],
-        minlength: 6
+        minlength: 8
     },
     confirm: {
         type: String,
         required: [true, 'Please confirm your password'],
-        minlength: 6,
+        minlength: 8,
         validate: {
             validator: function (elem) {
                 return elem === this.password;
@@ -37,7 +39,25 @@ const userSchema = new mongoose.Schema({
     },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
-    passwordChangedAt: Date
+    passwordChangedAt: Date,
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+        select: false
+    }
+}, {
+    toJSON: { virtuals: true },
+    toObjext: { virtuals: true }
+});
+
+userSchema.virtual('fullName').get(function() {
+    return `${this.firstName} ${this.lastName}`;
+});
+
+userSchema.virtual('gravatar').get(function() {
+    const hash = md5(this.email);
+
+    return `https://gravatar.com/avatar/${hash}?=200`;
 });
 
 userSchema.pre('save', async function (next) {
@@ -68,14 +88,12 @@ userSchema.methods.correctPassword = async function (candidatePassword, userPass
 userSchema.methods.createPasswordResetToken = function () {
     const resetToken = crypto.randomBytes(32).toString('hex');
 
-    this.resetPasswordToken = resetToken;
+    this.resetPasswordToken = crypto
+        .createHash('sha256')
+        .update(resetToken)
+        .digest('hex');
 
-    // this.resetPasswordToken = crypto
-    //     .createHash('sha256')
-    //     .update(resetToken)
-    //     .digest('hex');
-
-    console.log({ resetToken }, this.resetPasswordToken);
+    // console.log({ resetToken }, this.resetPasswordToken);
 
     this.resetPasswordExpires = Date.now() + 10 * 60 * 60; // 10 mins
 

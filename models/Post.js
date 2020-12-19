@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const postSchema = new mongoose.Schema({
     title: {
@@ -13,6 +14,7 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: [true, 'A post must have a body']
     },
+    slug: String,
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -39,14 +41,31 @@ const postSchema = new mongoose.Schema({
             }
         }
     ],
+    image: {
+        type: String,
+        default: 'post.png'
+    },
     date: {
         type: Date,
         default: Date.now
-    },
-    image: {
-        type: String,
-        default: 'noimage.jpg'
     }
+});
+
+postSchema.index({ title: 1, slug: 1 });
+
+postSchema.pre('save', async function(next) {
+    if (!this.isModified('title')) return next();
+
+    this.slug = slugify(this.title, { lower: true });
+
+    const slugRegEx = new RegExp(`^(${this.slug})((-[0-9]*$)?)$`, 'i');
+    const postWithSlug = await this.constructor.find({ slug: slugRegEx });
+
+    if (postWithSlug.length) {
+        this.slug = `${this.slug}-${postWithSlug.length + 1}`;
+    }
+
+    next();
 });
 
 postSchema.pre(/^find/, function (next) {

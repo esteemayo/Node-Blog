@@ -4,17 +4,17 @@ block content
     if errors
         each error, i in errors
             div.alert.alert-danger #{error.msg}
-    form(action="/auth/login", method="post")
+    form(action="/auth/login" method="POST")
         br
         .form-group
             label(for="email") Email:
-            input.form-control(name="email", type="email" placeholder="user@exanple.com")
+            input.form-control(name="email" id="email" type="email" placeholder="user@exanple.com" autofocus)
 
         .form-group
             label(for="password") Password:
-            input.form-control(name="password", type="password" placeholder="******")
+            input.form-control(name="password" id="password" type="password" placeholder="********")
 
-        input.btn.btn-default(type="submit", class="btn", name="submit", value="Login")
+        input.btn.btn-default(type="submit" class="btn" name="submit" value="Login →")
 
         p 
             a(href="/auth/forgot" class="forgot") Forgot Password?

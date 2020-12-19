@@ -4,26 +4,26 @@ block content
     if errors
         each error in errors
             div.alert.alert-danger #{error.msg}
-    form(action="/users/register", method="post")
+    form(action="/users/register" method="POST")
         br
         .form-group
             label(for="firstName") First Name:
-            input.form-control(name="firstName", type="text")
+            input.form-control(name="firstName" id="firstName" type="text" autofocus)
 
         .form-group
             label(for="lastName") Last Name:
-            input.form-control(name="lastName", type="text")
+            input.form-control(name="lastName" id="lastName" type="text")
 
         .form-group
             label(for="email") Email:
-            input.form-control(name="email", type="email" placeholder="user@example.com")
+            input.form-control(name="email" id="email" type="email" placeholder="user@example.com")
 
         .form-group
             label(for="password") Password:
-            input.form-control(name="password", type="password" placeholder="******")
+            input.form-control(name="password" id="password" type="password" placeholder="********")
 
         .form-group
             label(for="confirm") Confirm Password:
-            input.form-control(name="confirm", type="password" placeholder="******")
+            input.form-control(name="confirm" id="confirm" type="password" placeholder="********")
 
-        input.btn.btn-default(type="submit", class="btn", name="submit", value="Register")
+        input.btn.btn-default(type="submit" class="btn" name="submit" value="Register →")

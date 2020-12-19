@@ -8,8 +8,6 @@ router.get('/users/register', authController.getRegisterForm);
 
 router.post('/users/register', authController.signup);
 
-router.post('/api/v1/users/login', authController.apiLogin);
-
 router.get('/auth/login', authController.getLoginForm);
 
 router.post('/auth/login', authController.login);

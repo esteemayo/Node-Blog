@@ -1,16 +1,14 @@
 const _ = require('lodash');
-const multer = require('multer');
 const Post = require('../models/Post');
+const User = require('../models/User');
 const Category = require('../models/Category');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
-const upload = multer({ dest: './public/images' });
-
-exports.uploadPostImage = upload.single('image');
-
 exports.getPostOverview = catchAsync(async (req, res, next) => {
-    const posts = await Post.find();
+    const posts = await Post
+        .find()
+        .sort('-date');
 
     res.status(200).render('index', {
         title: 'Overview',
@@ -19,10 +17,10 @@ exports.getPostOverview = catchAsync(async (req, res, next) => {
 });
 
 exports.getPost = catchAsync(async (req, res, next) => {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findOne({ 'slug': req.params.slug });
 
     if (!post) {
-        return next(new AppError('No post found with that ID', 404));
+        return next(new AppError('No post found with that TITLE', 404));
     }
 
     res.status(200).render('show', {
@@ -32,21 +30,14 @@ exports.getPost = catchAsync(async (req, res, next) => {
 });
 
 exports.createPost = catchAsync(async (req, res, next) => {
-    // let post = _.pick(req.body, ['title', 'category', 'body', 'author', 'comment']);
-    const { title, category, body, author, comment } = req.body;
-    let post = {
-        title,
-        category,
-        body,
-        author: req.user.id,
-        comment
-    };
+    const newPost = _.pick(req.body, ['title', 'category', 'body', 'comment']);
 
-    if (req.file) post.image = req.file.filename
+    if (!req.body.author) newPost.author = req.user.id;
+    if (req.file) newPost.image = req.file.filename
 
-    post = await Post.create(post);
+    await Post.create(newPost);
 
-    req.flash('success', 'Post Added.');
+    req.flash('success', 'Post added successfully.');
     res.status(201).redirect('/');
 });
 
@@ -54,7 +45,7 @@ exports.getPostForm = catchAsync(async (req, res, next) => {
     const categories = await Category.find();
 
     res.status(200).render('addpost', {
-        title: 'Add post',
+        title: 'Create a new post',
         categories
     })
 });
@@ -68,39 +59,57 @@ exports.createComment = catchAsync(async (req, res, next) => {
     post.comments.push(commentObj);
     await post.save();
 
-    req.flash('success', 'Comment Added.');
-    res.status(201).redirect(`/posts/show/${post._id}`);
+    req.flash('success', 'Comment added successfully.');
+    res.status(201).redirect(`/posts/show/${post.slug}`);
 });
 
 exports.getCategory = catchAsync(async (req, res, next) => {
-    const post = await Post.find({ category: req.params.category });
-
-    if (!post) {
-        return next(new AppError('No post found with that category ID'));
-    }
+    const posts = await Post
+        .find({ 'category': req.params.category })
+        .sort('-date');
 
     res.status(200).render('index', {
-        title: '',
+        title: 'Category',
         posts
     });
 });
 
 exports.createCategory = catchAsync(async (req, res, next) => {
-    let category = _.pick(req.body, ['name']);
+    const newCategory = _.pick(req.body, ['name']);
 
-    category = await Category.create(category);
+    await Category.create(newCategory);
 
-    req.flash('success', 'Category Added');
+    req.flash('success', 'Category successfully added');
     res.status(201).redirect('/');
+});
+
+exports.updateUserData = catchAsync(async (req, res, next) => {
+    const filterBody = _.pick(req.body, ['firstName', 'lastName', 'email']);
+
+    await User.findByIdAndUpdate(req.user._id, filterBody, {
+        new: true,
+        runValidators: true
+    });
+
+    res.redirect('back');
 });
 
 exports.addCategoryForm = (req, res) => {
     res.status(200).render('addcategory', {
-        title: 'Add Category'
+        title: 'Create new category'
     });
 };
 
 exports.getForgotPasswordForm = (req, res) => {
     if (req.isAuthenticated()) return res.redirect('/');
-    res.status(200).render('forgot/forgot');
+
+    res.status(200).render('forgot/forgot', {
+        title: 'Forgot password'
+    });
 };
+
+exports.account = (req, res) => {
+    res.status(200).render('users/account', {
+        title: 'User account settings'
+    });
+}

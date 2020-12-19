@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const APIFeature = require('../utils/apiFeature');
@@ -39,11 +38,9 @@ exports.getOne = Model => catchAsync(async (req, res, next) => {
 });
 
 exports.createOne = Model => catchAsync(async (req, res, next) => {
-    let doc = req.body
+    if (req.file) req.body.image = req.file.filename
 
-    if (req.file) doc.image = req.file.filename
-
-    doc = await Model.create(doc);
+    const doc = await Model.create(req.body);
 
     res.status(201).json({
         status: 'success',
@@ -54,11 +51,9 @@ exports.createOne = Model => catchAsync(async (req, res, next) => {
 });
 
 exports.updateOne = Model => catchAsync(async (req, res, next) => {
-    let doc = req.body
+    if (req.file) req.body.image = req.file.filename
 
-    if (req.file) doc.image = req.file.filename
-
-    doc = await Model.findByIdAndUpdate(req.params.id, doc, {
+    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
     });

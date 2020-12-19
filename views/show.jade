@@ -4,8 +4,8 @@ block content
     .post
         h1= post.title
         p.meta Posted in 
-            a(href=`/categories/show/${post.category}`)= `${post.category} by ${post.author.firstName} ${post.author.lastName} on ${moment(post.date).format("MM-DD-YYYY")}`
-            img(src=`/images/post/${post.image}`) 
+            a(href=`/categories/show/${post.category}`)= `${post.category} by ${post.author.firstName} ${post.author.lastName} → ${h.moment(post.date).fromNow()}`
+            img(src=`/images/posts/${post.image}` alt=post.title) 
             !=post.body
             br
             hr
@@ -22,19 +22,19 @@ block content
                     ul.errors
                         each error in errors
                             li.alert.alert-danger #{error.msg}
-                form.comment-form(method="post" action=`/posts/addcomment/${post._id}`)
+                form.comment-form(method="POST" action=`/posts/addcomment/${post._id}`)
                     .form-group
-                        label Name
-                        input.form-control(type="text", name="name")
+                        label(for="name") Name
+                        input.form-control(type="text" id="name" name="name")
                     
                     .form-group
-                        label Email
-                        input.form-control(type="email", name="email")
+                        label(for="email") Email
+                        input.form-control(type="email" id="email" name="email")
 
                     .form-group
-                        label Body
-                        textarea.form-control(name="body")
+                        label(for="body") Body
+                        textarea.form-control(name="body" id="body")
 
                     br
-                    input.btn.btn-default(type="submit", name="submit", value="Add Comment")
+                    input.btn.btn-default(type="submit" name="submit" value="Add Comment")
 

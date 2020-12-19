@@ -1,8 +1,8 @@
 doctype html
 html
   head
-    title NodeBlog | #{title}
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    title #{h.siteName} | #{title}
+    link(rel='stylesheet', href='/css/style.css')
   body
     .container
       img(src="/images/nodebloglogo.png", alt="Node blog logo")
@@ -27,10 +27,11 @@ html
               a(href="/auth/login") Login
           if user
             li
-              a(href="#")= `${user.firstName}`
+              a(href="/account/me")= `${user.firstName}`
             li
               a(href="/auth/logout") Logout
       != messages()
       block content
       footer
-        p NodeBlog &copy; 2019
+        - const year = new Date();
+        p NodeBlog &copy; 2019 &mdash; #{year.getFullYear()}
