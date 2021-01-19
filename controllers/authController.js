@@ -11,8 +11,6 @@ exports.signup = catchAsync(async (req, res, next) => {
 
     const user = await User.create(newUser);
 
-    user.password = undefined;
-
     const url = `${req.protocol}://${req.get('host')}/auth/login`;
     await new sendEmail(user, url).sendWelcome();
 
@@ -71,7 +69,7 @@ exports.forgot = catchAsync(async (req, res, next) => {
         await user.save({ validateBeforeSave: false });
 
         req.flash('error', 'There was an error sending the email. Try again later!');
-        return res.status(200).redirect('/auth/forgot');
+        res.redirect('/auth/forgot');
     }
 });
 
@@ -86,7 +84,7 @@ exports.resetPasswordForm = catchAsync(async (req, res, next) => {
     // If token has not expired, and there is user, build and render a template
     if (!user) {
         req.flash('error', 'Password reset token is invalid or has expired.');
-        return res.status(401).redirect('/auth/forgot');
+        return res.redirect('/auth/forgot');
     }
 
     res.status(200).render('forgot/reset', {

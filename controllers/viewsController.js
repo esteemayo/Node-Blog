@@ -38,7 +38,7 @@ exports.createPost = catchAsync(async (req, res, next) => {
     await Post.create(newPost);
 
     req.flash('success', 'Post added successfully.');
-    res.status(201).redirect('/');
+    res.redirect('/');
 });
 
 exports.getPostForm = catchAsync(async (req, res, next) => {
@@ -60,7 +60,7 @@ exports.createComment = catchAsync(async (req, res, next) => {
     await post.save();
 
     req.flash('success', 'Comment added successfully.');
-    res.status(201).redirect(`/posts/show/${post.slug}`);
+    res.redirect(`/posts/show/${post.slug}`);
 });
 
 exports.getCategory = catchAsync(async (req, res, next) => {
@@ -80,7 +80,7 @@ exports.createCategory = catchAsync(async (req, res, next) => {
     await Category.create(newCategory);
 
     req.flash('success', 'Category successfully added');
-    res.status(201).redirect('/');
+    res.redirect('/');
 });
 
 exports.updateUserData = catchAsync(async (req, res, next) => {
